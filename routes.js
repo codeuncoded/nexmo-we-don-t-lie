@@ -23,7 +23,8 @@ router.post('/', function(req, res, next) {
     level: 'advancedAsync',
     number: req.body.number,
     callback: ' http://d3dfff0b09fc.ngrok.io/webhooks/insight'
-  }, (error, result) => {
+  },
+    (error, result) => {
     if(error) {
       console.error(error);
     }
@@ -31,7 +32,14 @@ router.post('/', function(req, res, next) {
       console.log(result);
     }
     // res.render('confirmation', { title: 'Nexmo', result: result});
-    res.send(result);
+    // res.send(result);
+      res.render("code");
   });
 });
+
+router.post('/verify', function(req, res, next) {
+  let code = req.body.code;
+  console.log(code);
+});
+
 module.exports = router;
