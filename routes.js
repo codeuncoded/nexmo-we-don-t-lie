@@ -10,30 +10,33 @@ nexmo = new nexmo({
 )
 
 const onInboundCall = (request, response) => {
+  const number = request.body.number;
+  console.log(request.body.number);
   const ncco = [{
     action: "record",
     eventUrl: [`${request.protocol}://${request.get('host')}/webhooks/recordings`]
   },
     {
       action: "connect",
-      from: "918500878787",
+      from: number,
       endpoint: [{
         type: "phone",
-        number: "918500008787"
+        number: number
       }]
     }
   ];
   nexmo.calls.create(
     {
-      to: [{type: 'phone', number: '918500878787'}],
-      from: {type: 'phone', number: '918500878787'},
+      to: [{type: 'phone', number: number}],
+      from: {type: 'phone', number: number},
       ncco,
     },
     (err, result) => {
       console.log(err || result);
     },
   );
-  response.json(ncco)
+  // response.json(ncco)
+  response.render('confirmation', {title: 'Nexmo'});
 }
 
 const onRecording = (request, response) => {
@@ -57,7 +60,7 @@ router
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('input', {title: 'Nexmo'});
+  res.render('signup', {title: 'Nexmo'});
 });
 
 router.post('/webhooks/insight', function (request, response) {
@@ -96,6 +99,21 @@ router.post('/', function (req, res, next) {
     });
 });
 
+router.post("/signup", function (req, res) {
+  nexmo.verify.request({
+    number: req.body.number,
+    brand: "Nexmo"
+  }, (err, result) => {
+    if (err) {
+      console.error(err);
+    } else {
+      verifyRequestId = result.request_id;
+      console.log('request_id', verifyRequestId);
+    }
+  });
+  res.render("code", {title: "Nexmo", number: req.body.number});
+})
+
 router.post('/verify', function (req, res, next) {
   let code = req.body.code;
   console.log(code);
@@ -108,36 +126,13 @@ router.post('/verify', function (req, res, next) {
       res.render('code', {title: "Nexmo"});
     } else {
       console.log(result);
-      let ncco = [
-        {
-          action: 'talk',
-          voiceName: 'Joey',
-          text:
-            'You have successfully registered',
-        },
-      ];
-      ncco = [
-        {
-          "action": "stream",
-          "streamUrl": [
-            "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"
-          ]
-        }
-      ];
-      nexmo.calls.create(
-        {
-          to: [{type: 'phone', number: '918500878787'}],
-          from: {type: 'phone', number: '918500878787'},
-          ncco,
-        },
-        (err, result) => {
-          console.log(err || result);
-        },
-      );
-      res.render('confirmation', {title: "Nexmo"});
+      if(result.status != 0)
+        res.render('code', {title: "Nexmo"});
+      // res.render('confirmation', {title: "Nexmo"});
+      //res.redirect('/webhooks/answer');
+      onInboundCall(req, res);
     }
   });
-
 });
 
 module.exports = router;
