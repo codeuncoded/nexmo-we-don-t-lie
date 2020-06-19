@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
-<body>
-<h1><%= title %></h1>
-<p>Thank you for your interest! We will call you shortly! </p>
-</body>
-</html>
+<% include partials/header.ejs %>
+
+<!--<p>Thank you for your interest! We will call you shortly! </p>-->
+<div class="alert alert-success" role="alert">
+    Thank you for your interest! We will call you shortly!
+</div>
+<% include partials/footer.ejs %>
