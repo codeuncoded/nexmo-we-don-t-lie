@@ -1,15 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
-<body>
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
-<form action="/signup" method="post">
-    <input type="text" name="number">
-    <button>Submit!</button>
-</form>
-</body>
-</html>
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <title><%= title %></title>-->
+<!--    <link rel='stylesheet' href='/stylesheets/style.css' />-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1><%= title %></h1>-->
+<!--<p>Welcome to <%= title %></p>-->
+<!--<form action="/signup" method="post">-->
+<!--    <input type="text" name="number">-->
+<!--    <button>Submit!</button>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<% include partials/header.ejs %>
+
+<div class="container">
+    <form action="/signup" method="post">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Phone</label>
+            <input type="text" class="form-control" id="number" name="number" aria-describedby="emailHelp" placeholder="918500878787">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<% include partials/footer.ejs %>
+

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var nexmo = require('nexmo');
+
 nexmo = new nexmo({
     apiKey: process.env.NEXMO_API_KEY,
     apiSecret: process.env.NEXMO_API_SECRET,
@@ -35,7 +36,6 @@ const onInboundCall = (request, response) => {
       console.log(err || result);
     },
   );
-  // response.json(ncco)
   response.render('confirmation', {title: 'Nexmo'});
 }
 
@@ -43,20 +43,14 @@ const onRecording = (request, response) => {
   const recording_url = request.body.recording_url
   console.log(`Recording URL = ${recording_url}`)
   nexmo.files.save(recording_url, 'test.mp3', (err, res) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(res);
-    }
+    console.log(err || res);
   });
-
   response.status(204).send()
 }
 
 router
   .get('/webhooks/answer', onInboundCall)
   .post('/webhooks/recordings', onRecording)
-
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -67,7 +61,6 @@ router.post('/webhooks/insight', function (request, response) {
   console.log("params", Object.assign(request.query, request.body));
   response.status(204).send()
 });
-
 
 let verifyRequestId = null;
 router.post('/', function (req, res, next) {
@@ -82,8 +75,6 @@ router.post('/', function (req, res, next) {
       } else {
         console.log(result);
       }
-      // res.render('confirmation', { title: 'Nexmo', result: result});
-      // res.send(result);
       nexmo.verify.request({
         number: req.body.number,
         brand: "Nexmo"
@@ -126,10 +117,9 @@ router.post('/verify', function (req, res, next) {
       res.render('code', {title: "Nexmo"});
     } else {
       console.log(result);
-      if(result.status != 0)
+      if (result.status !== '0') {
         res.render('code', {title: "Nexmo"});
-      // res.render('confirmation', {title: "Nexmo"});
-      //res.redirect('/webhooks/answer');
+      } else
       onInboundCall(req, res);
     }
   });
