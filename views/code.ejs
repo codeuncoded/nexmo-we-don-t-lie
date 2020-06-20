@@ -3,9 +3,10 @@
 <div class="container">
     <form action="/verify" method="post">
         <div class="form-group">
+            <label for="exampleInputEmail1">Phone</label>
+            <input type="text" class="form-control" id="number" name="number" aria-describedby="emailHelp" value=<%= number %> readonly>
             <label for="exampleInputEmail1">Code</label>
             <input type="text" class="form-control" id="number" name="code" aria-describedby="emailHelp" placeholder="1947">
-            <input type="text" name="number" value=<%= number %> hidden>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

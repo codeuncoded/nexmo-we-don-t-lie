@@ -118,7 +118,7 @@ router.post('/verify', function (req, res, next) {
     } else {
       console.log(result);
       if (result.status !== '0') {
-        res.render('code', {title: "Nexmo"});
+        res.render('code', {title: "Nexmo", number: req.body.number});
       } else
       onInboundCall(req, res);
     }
